@@ -43,7 +43,7 @@ A simple interactive tool to organize your Spotify liked songs into playlists.
 4. **Start the API server:**
 
    ```bash
-   uvicorn main:app --reload --port 8080
+   uvicorn main:app
    ```
 
 5. **Authenticate:**
