@@ -1,0 +1,6 @@
+{
+    "terminal.integrated.env.windows": {
+        "NO_PROXY": ".spotify.com,localhost,127.0.0.1,.van.magna.global,.magna.global,vanlinsv60001,searxng,app-staging.ids-mml,app.ids-mml,.ids-mml",
+        "no_proxy": ".spotify.com,localhost,127.0.0.1,.van.magna.global,.magna.global,vanlinsv60001,searxng,app-staging.ids-mml,app.ids-mml,.ids-mml"
+    }
+}
