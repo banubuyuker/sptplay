@@ -39,7 +39,7 @@ class TokenManager:
                 await self._refresh_token()
             else:
                 print("⚠️ Token expired and no refresh token available.")
-                print("Get a new token at: http://localhost:8080/auth/login")
+                print("Get a new token at: http://127.0.0.1:8000/auth/login")
                 raise ValueError("Access token expired")
 
     async def _refresh_token(self):
@@ -146,10 +146,11 @@ class SpotifyOrganizer:
     async def _delete(self, endpoint: str, json_data: dict = None) -> dict:
         await self._ensure_token()
         async with httpx.AsyncClient(trust_env=False) as client:
-            response = await client.delete(
+            response = await client.request(
+                "DELETE",
                 f"{SPOTIFY_API_BASE}{endpoint}",
                 headers=self.headers,
-                content=json.dumps(json_data) if json_data else None,
+                json=json_data,
             )
             response.raise_for_status()
             return response.json() if response.content else {}
@@ -212,11 +213,12 @@ class SpotifyOrganizer:
 
     async def add_to_playlist(self, playlist_id: str, track_uri: str):
         """Add a track to a playlist."""
-        await self._post(f"/playlists/{playlist_id}/tracks", {"uris": [track_uri]})
+        await self._post(f"/playlists/{playlist_id}/items", {"uris": [track_uri]})
 
     async def remove_from_liked(self, track_id: str):
-        """Remove a track from liked songs."""
-        await self._delete("/me/tracks", {"ids": [track_id]})
+        """Remove a track from liked songs using the /me/library endpoint."""
+        uri = f"spotify:track:{track_id}"
+        await self._delete(f"/me/library?uris={uri}")
 
     async def create_playlist(self, name: str) -> dict:
         """Create a new playlist."""
@@ -272,7 +274,7 @@ async def interactive_organize():
         print("\n❌ No SPOTIFY_ACCESS_TOKEN found!")
         print("\nTo get a token:")
         print("1. Run: uvicorn main:app --reload")
-        print("2. Visit: http://localhost:8080/auth/login")
+        print("2. Visit: http://127.0.0.1:8000/auth/login")
         print("3. Copy the access_token to your .env file")
         return
 
@@ -408,5 +410,7 @@ async def interactive_organize():
 
 
 if __name__ == "__main__":
-    asyncio.run(interactive_organize())
-    asyncio.run(interactive_organize())
+    try:
+        asyncio.run(interactive_organize())
+    except (KeyboardInterrupt, EOFError):
+        print("\n👋 Goodbye!")

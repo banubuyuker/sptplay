@@ -29,7 +29,7 @@ A simple interactive tool to organize your Spotify liked songs into playlists.
 2. **Create Spotify App:**
    - Go to https://developer.spotify.com/dashboard
    - Create a new app
-   - Add redirect URI: `http://localhost:8080`
+   - Add redirect URI: `http://127.0.0.1:8000`
    - Copy Client ID and Client Secret
 
 3. **Configure environment:**
@@ -47,7 +47,7 @@ A simple interactive tool to organize your Spotify liked songs into playlists.
    ```
 
 5. **Authenticate:**
-   - Open http://localhost:8080/auth/login
+   - Open http://127.0.0.1:8000/auth/login
    - Authorize the app
    - Tokens will be auto-saved to `.env`
 
