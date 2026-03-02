@@ -41,7 +41,7 @@ class SpotifyOrganizer:
 
         while True:
             response = await self._get(
-                "/me/tracks", {"limit": batch_size, "offset": offset}
+                "/me/items", {"limit": batch_size, "offset": offset}
             )
             items = response.get("items", [])
             tracks.extend(items)

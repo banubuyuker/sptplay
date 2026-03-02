@@ -212,11 +212,11 @@ class SpotifyOrganizer:
 
     async def add_to_playlist(self, playlist_id: str, track_uri: str):
         """Add a track to a playlist."""
-        await self._post(f"/playlists/{playlist_id}/tracks", {"uris": [track_uri]})
+        await self._post(f"/playlists/{playlist_id}/items", {"uris": [track_uri]})
 
     async def remove_from_liked(self, track_id: str):
         """Remove a track from liked songs."""
-        await self._delete("/me/tracks", {"ids": [track_id]})
+        await self._delete("/me/items", {"ids": [track_id]})
 
     async def create_playlist(self, name: str) -> dict:
         """Create a new playlist."""

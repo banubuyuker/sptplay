@@ -84,7 +84,7 @@ class SpotifyClient:
         """Get tracks from a playlist."""
         return await self._request(
             "GET",
-            f"/playlists/{playlist_id}/tracks",
+            f"/playlists/{playlist_id}/items",
             params={"limit": limit, "offset": offset},
         )
 
@@ -129,7 +129,7 @@ class SpotifyClient:
     ) -> dict:
         """Add tracks to a playlist (max 100 at a time)."""
         return await self._request(
-            "POST", f"/playlists/{playlist_id}/tracks", json={"uris": track_uris[:100]}
+            "POST", f"/playlists/{playlist_id}/items", json={"uris": track_uris[:100]}
         )
 
     async def update_playlist(
@@ -156,7 +156,7 @@ class SpotifyClient:
         """Remove tracks from a playlist."""
         tracks = [{"uri": uri} for uri in track_uris]
         return await self._request(
-            "DELETE", f"/playlists/{playlist_id}/tracks", json={"tracks": tracks}
+            "DELETE", f"/playlists/{playlist_id}/items", json={"tracks": tracks}
         )
 
 
