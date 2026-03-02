@@ -168,6 +168,7 @@ def get_auth_url(state: Optional[str] = None) -> str:
         "response_type": "code",
         "redirect_uri": REDIRECT_URI,
         "scope": " ".join(SCOPES),
+        "show_dialog": "true",  # Force consent screen to get new scopes
     }
     if state:
         params["state"] = state

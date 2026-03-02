@@ -216,8 +216,9 @@ class SpotifyOrganizer:
         await self._post(f"/playlists/{playlist_id}/items", {"uris": [track_uri]})
 
     async def remove_from_liked(self, track_id: str):
-        """Remove a track from liked songs."""
-        await self._delete("/me/tracks", {"ids": [track_id]})
+        """Remove a track from liked songs using the /me/library endpoint."""
+        uri = f"spotify:track:{track_id}"
+        await self._delete(f"/me/library?uris={uri}")
 
     async def create_playlist(self, name: str) -> dict:
         """Create a new playlist."""
