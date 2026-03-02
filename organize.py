@@ -39,7 +39,7 @@ class TokenManager:
                 await self._refresh_token()
             else:
                 print("⚠️ Token expired and no refresh token available.")
-                print("Get a new token at: http://localhost:8000/auth/login")
+                print("Get a new token at: http://127.0.0.1:8000/auth/login")
                 raise ValueError("Access token expired")
 
     async def _refresh_token(self):
@@ -273,7 +273,7 @@ async def interactive_organize():
         print("\n❌ No SPOTIFY_ACCESS_TOKEN found!")
         print("\nTo get a token:")
         print("1. Run: uvicorn main:app --reload")
-        print("2. Visit: http://localhost:8000/auth/login")
+        print("2. Visit: http://127.0.0.1:8000/auth/login")
         print("3. Copy the access_token to your .env file")
         return
 

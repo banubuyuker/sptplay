@@ -20,7 +20,7 @@ SPOTIFY_API_BASE = "https://api.spotify.com/v1"
 # Load credentials from environment
 CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
-REDIRECT_URI = os.getenv("SPOTIFY_REDIRECT_URI", "http://localhost:8000/auth/callback")
+REDIRECT_URI = os.getenv("SPOTIFY_REDIRECT_URI", "http://127.0.0.1:8000/callback")
 
 # Scopes needed for playlist management
 SCOPES = [

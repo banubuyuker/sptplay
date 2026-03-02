@@ -172,7 +172,7 @@ async def main():
         print("Please run the auth flow first or set your token.")
         print("\nTo get a token:")
         print("1. Run the FastAPI server: uvicorn main:app --reload")
-        print("2. Visit: http://localhost:8000/auth/login")
+        print("2. Visit: http://127.0.0.1:8000/auth/login")
         print("3. Copy the access_token and set it:")
         print("   export SPOTIFY_ACCESS_TOKEN='your_token_here'")
         return
