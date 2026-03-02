@@ -13,8 +13,17 @@ A simple interactive tool to organize your Spotify liked songs into playlists.
 ## Setup
 
 1. **Install dependencies:**
+
+   This repository uses `uv` for dependency management. If you don't have uv:
+
    ```bash
-   pip install -r requirements.txt
+   pip install uv
+   ```
+
+   Then install dependencies via:
+
+   ```bash
+   uv sync
    ```
 
 2. **Create Spotify App:**
@@ -24,12 +33,15 @@ A simple interactive tool to organize your Spotify liked songs into playlists.
    - Copy Client ID and Client Secret
 
 3. **Configure environment:**
+
    ```bash
    cp .env.example .env
    ```
+
    Edit `.env` and add your Spotify credentials.
 
 4. **Start the API server:**
+
    ```bash
    uvicorn main:app --reload --port 8080
    ```
@@ -40,6 +52,7 @@ A simple interactive tool to organize your Spotify liked songs into playlists.
    - Tokens will be auto-saved to `.env`
 
 6. **Run the organizer:**
+
    ```bash
    python organize.py
    ```
