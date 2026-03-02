@@ -146,10 +146,11 @@ class SpotifyOrganizer:
     async def _delete(self, endpoint: str, json_data: dict = None) -> dict:
         await self._ensure_token()
         async with httpx.AsyncClient(trust_env=False) as client:
-            response = await client.delete(
+            response = await client.request(
+                "DELETE",
                 f"{SPOTIFY_API_BASE}{endpoint}",
                 headers=self.headers,
-                content=json.dumps(json_data) if json_data else None,
+                json=json_data,
             )
             response.raise_for_status()
             return response.json() if response.content else {}
@@ -216,7 +217,7 @@ class SpotifyOrganizer:
 
     async def remove_from_liked(self, track_id: str):
         """Remove a track from liked songs."""
-        await self._delete("/me/items", {"ids": [track_id]})
+        await self._delete("/me/tracks", {"ids": [track_id]})
 
     async def create_playlist(self, name: str) -> dict:
         """Create a new playlist."""
