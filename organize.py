@@ -410,5 +410,5 @@ async def interactive_organize():
 if __name__ == "__main__":
     try:
         asyncio.run(interactive_organize())
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, EOFError):
         print("\n👋 Goodbye!")
