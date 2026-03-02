@@ -408,5 +408,7 @@ async def interactive_organize():
 
 
 if __name__ == "__main__":
-    asyncio.run(interactive_organize())
-    asyncio.run(interactive_organize())
+    try:
+        asyncio.run(interactive_organize())
+    except KeyboardInterrupt:
+        print("\n👋 Goodbye!")
