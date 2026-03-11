@@ -244,14 +244,17 @@ def display_song(song: dict, index: int, total: int):
     print("\n" + "-" * 60)
 
 
-def display_menu(playlists: list):
+def display_menu(playlists: list, can_go_back: bool = False):
     """Display action menu."""
     print("\nWhat do you want to do?\n")
     print("  [S] Skip to next song")
+    if can_go_back:
+        print("  [P] Previous song")
     print("  [R] Remove from liked songs")
     print("  [N] Create new playlist and add")
+    print("  [A #] Add to playlist # (keep in liked)")
     print("  [Q] Quit")
-    print("\n  -- Or add to playlist: --\n")
+    print("\n  -- Or move to playlist (removes from liked): --\n")
 
     for i, playlist in enumerate(playlists[:15], 1):  # Show first 15 playlists
         name = (
@@ -341,7 +344,7 @@ async def interactive_organize():
                 print(f"  [{j}] {name}")
             print("\n  [B] Back to short list")
         else:
-            display_menu(playlists)
+            display_menu(playlists, can_go_back=(i > 0))
 
         print()
         choice = input("Your choice: ").strip().upper()
@@ -353,6 +356,11 @@ async def interactive_organize():
 
         elif choice == "S":
             i += 1
+            continue
+
+        elif choice == "P":
+            if i > 0:
+                i -= 1
             continue
 
         elif choice == "R":
@@ -385,14 +393,38 @@ async def interactive_organize():
                     print(f"\n❌ Error: {e}")
                     input("Press Enter to continue...")
 
+        elif choice.startswith("A") and len(choice) > 1:
+            # A # = Add to playlist without removing from liked
+            num_part = choice[1:].strip()
+            if num_part.isdigit():
+                idx = int(num_part) - 1
+                if 0 <= idx < len(playlists):
+                    try:
+                        playlist = playlists[idx]
+                        await organizer.add_to_playlist(playlist["id"], song["uri"])
+                        print(f"\n✅ Added '{song['name']}' to '{playlist['name']}'")
+                        i += 1
+                        input("Press Enter to continue...")
+                    except Exception as e:
+                        print(f"\n❌ Error: {e}")
+                        input("Press Enter to continue...")
+                else:
+                    print("\n❌ Invalid playlist number")
+                    input("Press Enter to continue...")
+            else:
+                print("\n❌ Invalid format. Use: A 3 or A3")
+                input("Press Enter to continue...")
+
         elif choice.isdigit():
+            # Number = Move to playlist (add + remove from liked)
             idx = int(choice) - 1
             if 0 <= idx < len(playlists):
                 try:
                     playlist = playlists[idx]
                     await organizer.add_to_playlist(playlist["id"], song["uri"])
-                    print(f"\n✅ Added '{song['name']}' to '{playlist['name']}'")
-                    i += 1
+                    await organizer.remove_from_liked(song["id"])
+                    print(f"\n✅ Moved '{song['name']}' to '{playlist['name']}'")
+                    songs.pop(i)  # Remove from our list too
                     input("Press Enter to continue...")
                 except Exception as e:
                     print(f"\n❌ Error: {e}")
