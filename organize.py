@@ -284,7 +284,7 @@ def display_menu(playlists: list, can_go_back: bool = False):
     print("  [R] Remove from liked songs")
     print("  [N] Create new playlist and add")
     print("  [A #] Add to playlist # (keep in liked)")
-    print("  [Q] Quit")
+    print("  [Q] Back to main menu")
     print("\n  -- Or move to playlist (removes from liked): --\n")
 
     for i, playlist in enumerate(playlists[:15], 1):  # Show first 15 playlists
@@ -311,7 +311,7 @@ def display_playlist_menu(
     print(f"  [R] Remove from '{source_playlist_name}'")
     print("  [N] Create new playlist and move")
     print(f"  [A #] Add to playlist # (keep in '{source_playlist_name}')")
-    print("  [Q] Quit")
+    print("  [Q] Back to main menu")
     print(f"\n  -- Or move to playlist (removes from '{source_playlist_name}'): --\n")
 
     for i, playlist in enumerate(playlists[:15], 1):  # Show first 15 playlists
