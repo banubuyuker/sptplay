@@ -244,10 +244,12 @@ def display_song(song: dict, index: int, total: int):
     print("\n" + "-" * 60)
 
 
-def display_menu(playlists: list):
+def display_menu(playlists: list, can_go_back: bool = False):
     """Display action menu."""
     print("\nWhat do you want to do?\n")
     print("  [S] Skip to next song")
+    if can_go_back:
+        print("  [P] Previous song")
     print("  [R] Remove from liked songs")
     print("  [N] Create new playlist and add")
     print("  [Q] Quit")
@@ -341,7 +343,7 @@ async def interactive_organize():
                 print(f"  [{j}] {name}")
             print("\n  [B] Back to short list")
         else:
-            display_menu(playlists)
+            display_menu(playlists, can_go_back=(i > 0))
 
         print()
         choice = input("Your choice: ").strip().upper()
@@ -353,6 +355,11 @@ async def interactive_organize():
 
         elif choice == "S":
             i += 1
+            continue
+
+        elif choice == "P":
+            if i > 0:
+                i -= 1
             continue
 
         elif choice == "R":
