@@ -155,9 +155,9 @@ class SpotifyClient:
         self, playlist_id: str, track_uris: list[str]
     ) -> dict:
         """Remove tracks from a playlist."""
-        tracks = [{"uri": uri} for uri in track_uris]
+        items = [{"uri": uri} for uri in track_uris]
         return await self._request(
-            "DELETE", f"/playlists/{playlist_id}/items", json={"tracks": tracks}
+            "DELETE", f"/playlists/{playlist_id}/items", json={"items": items}
         )
 
 
