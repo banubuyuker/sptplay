@@ -11,6 +11,8 @@ from pathlib import Path
 import httpx
 from dotenv import load_dotenv
 
+from ai_client import get_ai_client, get_song_ai_info
+
 load_dotenv()
 
 SPOTIFY_API_BASE = "https://api.spotify.com/v1"
@@ -263,8 +265,8 @@ def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
 
 
-def display_song(song: dict, index: int, total: int):
-    """Display song info."""
+def display_song(song: dict, index: int, total: int, ai_info: str = None):
+    """Display song info with optional AI-generated context."""
     print("\n" + "=" * 60)
     print(f"  Song {index + 1} of {total}")
     print("=" * 60)
@@ -272,6 +274,8 @@ def display_song(song: dict, index: int, total: int):
     print(f"  🎤 {', '.join(song['artists'])}")
     print(f"  💿 {song['album']}")
     print(f"  📅 {song['year']}")
+    if ai_info:
+        print(f"  🤖 {ai_info}")
     print("\n" + "-" * 60)
 
 
@@ -385,17 +389,39 @@ async def organize_liked_songs(organizer: SpotifyOrganizer, playlists: list):
         return
 
     print(f"\nReady! Let's organize {len(songs)} songs.\n")
+
+    # Check if AI is enabled
+    ai_client = get_ai_client()
+    if ai_client.enabled:
+        print("🤖 AI song info enabled")
+    else:
+        print("💡 Tip: Set OPENAI_API_KEY in .env for AI song info")
+
     input("Press Enter to start...")
 
     # Main loop
     show_all_playlists = False
     i = 0
+    ai_cache = {}  # Cache AI responses to avoid repeat calls
 
     while i < len(songs):
         song = songs[i]
 
+        # Get AI info (with caching)
+        ai_info = None
+        if ai_client.enabled:
+            cache_key = f"{song['name']}|{song['artists'][0]}"
+            if cache_key not in ai_cache:
+                ai_cache[cache_key] = await get_song_ai_info(
+                    song["name"],
+                    ", ".join(song["artists"]),
+                    song["album"],
+                    song["year"],
+                )
+            ai_info = ai_cache.get(cache_key)
+
         clear_screen()
-        display_song(song, i, len(songs))
+        display_song(song, i, len(songs), ai_info)
 
         if show_all_playlists:
             print("\n  All playlists:\n")
@@ -565,6 +591,14 @@ async def organize_playlist(
 
     print(f"Found {len(songs)} songs")
     print(f"\nReady! Let's organize '{source_name}'.\n")
+
+    # Check if AI is enabled
+    ai_client = get_ai_client()
+    if ai_client.enabled:
+        print("🤖 AI song info enabled")
+    else:
+        print("💡 Tip: Set OPENAI_API_KEY in .env for AI song info")
+
     input("Press Enter to start...")
 
     # Filter out source playlist from target options
@@ -573,13 +607,27 @@ async def organize_playlist(
     # Main loop
     show_all_playlists = False
     i = 0
+    ai_cache = {}  # Cache AI responses
 
     while i < len(songs):
         song = songs[i]
 
+        # Get AI info (with caching)
+        ai_info = None
+        if ai_client.enabled:
+            cache_key = f"{song['name']}|{song['artists'][0]}"
+            if cache_key not in ai_cache:
+                ai_cache[cache_key] = await get_song_ai_info(
+                    song["name"],
+                    ", ".join(song["artists"]),
+                    song["album"],
+                    song["year"],
+                )
+            ai_info = ai_cache.get(cache_key)
+
         clear_screen()
         print(f"\n📋 Organizing: {source_name}")
-        display_song(song, i, len(songs))
+        display_song(song, i, len(songs), ai_info)
 
         if show_all_playlists:
             print("\n  All playlists:\n")
