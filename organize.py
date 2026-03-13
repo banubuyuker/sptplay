@@ -221,10 +221,7 @@ class SpotifyOrganizer:
 
     async def create_playlist(self, name: str) -> dict:
         """Create a new playlist."""
-        user = await self._get("/me")
-        return await self._post(
-            f"/users/{user['id']}/playlists", {"name": name, "public": False}
-        )
+        return await self._post("/me/playlists", {"name": name, "public": False})
 
     async def get_playlist_items(self, playlist_id: str, limit: int = None) -> list:
         """Fetch items from a playlist using the new API endpoint."""
@@ -283,9 +280,9 @@ def display_menu(playlists: list, can_go_back: bool = False):
         print("  [P] Previous song")
     print("  [R] Remove from liked songs")
     print("  [N] Create new playlist and add")
-    print("  [A #] Add to playlist # (keep in liked)")
+    print("  [A #] Add to playlist #")
     print("  [Q] Back to main menu")
-    print("\n  -- Or move to playlist (removes from liked): --\n")
+    print("\n  -- Or move to playlist: --\n")
 
     for i, playlist in enumerate(playlists[:15], 1):  # Show first 15 playlists
         name = (
@@ -310,9 +307,9 @@ def display_playlist_menu(
         print("  [P] Previous song")
     print(f"  [R] Remove from '{source_playlist_name}'")
     print("  [N] Create new playlist and move")
-    print(f"  [A #] Add to playlist # (keep in '{source_playlist_name}')")
+    print("  [A #] Add to playlist #")
     print("  [Q] Back to main menu")
-    print(f"\n  -- Or move to playlist (removes from '{source_playlist_name}'): --\n")
+    print("\n  -- Or move to playlist : --\n")
 
     for i, playlist in enumerate(playlists[:15], 1):  # Show first 15 playlists
         name = (

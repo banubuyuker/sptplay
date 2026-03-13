@@ -116,12 +116,9 @@ class SpotifyClient:
         self, name: str, description: str = "", public: bool = False
     ) -> dict:
         """Create a new playlist."""
-        user = await self.get_current_user()
-        user_id = user["id"]
-
         return await self._request(
             "POST",
-            f"/users/{user_id}/playlists",
+            "/me/playlists",
             json={"name": name, "description": description, "public": public},
         )
 
