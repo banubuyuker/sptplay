@@ -345,7 +345,9 @@ def display_playlist_selection(playlists: list):
             else playlist["name"]
         )
         print(f"  [{i}] {name}")
-    print("\n  [Q] Back to main menu")
+    print("\n  [N] Create new playlist")
+    print("  [D #] Delete playlist #")
+    print("  [Q] Back to main menu")
     print()
 
 
@@ -742,7 +744,45 @@ async def interactive_organize():
                 if pl_choice == "Q":
                     break
 
-                if pl_choice.isdigit():
+                if pl_choice == "N":
+                    name = input("\nNew playlist name: ").strip()
+                    if name:
+                        try:
+                            new_playlist = await organizer.create_playlist(name)
+                            playlists.insert(0, new_playlist)
+                            print(f"\n✅ Created playlist '{name}'")
+                        except Exception as e:
+                            print(f"\n❌ Error creating playlist: {e}")
+                        input("Press Enter to continue...")
+
+                elif pl_choice.startswith("D") and len(pl_choice) > 1:
+                    # D # = Delete playlist
+                    num_part = pl_choice[1:].strip()
+                    if num_part.isdigit():
+                        idx = int(num_part) - 1
+                        if 0 <= idx < len(playlists):
+                            playlist = playlists[idx]
+                            confirm = (
+                                input(f"\n⚠️  Delete '{playlist['name']}'? [Y/N]: ")
+                                .strip()
+                                .upper()
+                            )
+                            if confirm == "Y":
+                                try:
+                                    await organizer.delete_playlist(playlist["id"])
+                                    print(f"\n✅ Deleted playlist '{playlist['name']}'")
+                                    playlists = await organizer.get_playlists()
+                                except Exception as e:
+                                    print(f"\n❌ Error deleting playlist: {e}")
+                                input("Press Enter to continue...")
+                        else:
+                            print("\n❌ Invalid playlist number")
+                            input("Press Enter to continue...")
+                    else:
+                        print("\n❌ Invalid format. Use: D 3 or D3")
+                        input("Press Enter to continue...")
+
+                elif pl_choice.isdigit():
                     idx = int(pl_choice) - 1
                     if 0 <= idx < len(playlists):
                         await organize_playlist(organizer, playlists, playlists[idx])
